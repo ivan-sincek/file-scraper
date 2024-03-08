@@ -1,0 +1,47 @@
+{
+   "authorization":{
+      "query":"[^\\w\\d\\n]+(?:basic|bearer)\\ .+",
+      "ignorecase":true,
+      "search":true
+   },
+   "variable":{
+      "query":"(?:access|account|admin|basic|bearer|card|conf|cred|customer|email|history|id|info|jwt|key|kyc|log|otp|pass|pin|priv|refresh|salt|secret|seed|setting|sign|token|transaction|transfer|user)[\\w\\d]*(?:\\\"\\ *\\:|\\ *\\=).+",
+      "ignorecase":true,
+      "search":true
+   },
+   "comment":{
+      "query":"[^\\w\\d\\n]+(?:bug|comment|fix|issue|note|problem|to(?:\\_|\\ |)do|work)[^\\w\\d\\n]+.+",
+      "ignorecase":true,
+      "search":true
+   },
+   "url":{
+      "query":"\\w+\\:\\/\\/[\\w\\-\\.\\@\\:\\/\\?\\=\\%\\&\\#]+",
+      "unique":true,
+      "collect":true
+   },
+   "ip":{
+      "query":"(?:\b25[0-5]|\b2[0-4][0-9]|\b[01]?[0-9][0-9]?)(?:\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}",
+      "unique":true,
+      "collect":true
+   },
+   "base64":{
+      "query":"(?:[a-zA-Z0-9\\+\\/]{4})*(?:[a-zA-Z0-9\\+\\/]{4}|[a-zA-Z0-9\\+\\/]{3}\\=|[a-zA-Z0-9\\+\\/]{2}\\=\\=)",
+      "minimum":8,
+      "decode":"base64",
+      "unique":true,
+      "collect":true
+   },
+   "hex":{
+      "query":"(?:(?:0x|(?:\\\\)+x)[a-fA-F0-9]{2})+|[a-fA-F0-9]+",
+      "minimum":12,
+      "decode":"hex",
+      "unique":true,
+      "collect":true
+   },
+   "cert":{
+      "query":"-----BEGIN (?:CERTIFICATE|PRIVATE KEY)-----[\\s\\S]+?-----END (?:CERTIFICATE|PRIVATE KEY)-----",
+      "decode":"cert",
+      "unique":true,
+      "collect":true
+   }
+}

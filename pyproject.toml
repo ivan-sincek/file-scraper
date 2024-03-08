@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "file-scraper"
+version = "2.8"
+authors = [{ name = "Ivan Sincek" }]
+description = "Scrape files for sensitive information, and generate an interactive HTML report."
+readme = "README.md"
+requires-python = ">=3.6"
+classifiers = [
+	"Programming Language :: Python :: 3",
+	"License :: OSI Approved :: MIT License",
+	"Operating System :: OS Independent"
+]
+dependencies = ["argparse>=1.4.0", "beautifulsoup4>=4.11.1", "bs4>=0.0.1", "datetime>=5.0", "jsbeautifier>=1.14.11", "pyOpenSSL>=23.2.0", "regex>=2022.4.24"]
+
+[project.urls]
+"Homepage" = "https://github.com/ivan-sincek/file-scraper"
+
+[project.scripts]
+file-scraper = "file_scraper.file_scraper:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["default.json", "FiraCode-Medium.otf"]
