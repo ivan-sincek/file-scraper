@@ -55,7 +55,7 @@ python3 -m pip install --upgrade build
 
 python3 -m build
 
-python3 -m pip install dist/file_scraper-2.8-py3-none-any.whl
+python3 -m pip install dist/file_scraper-2.9-py3-none-any.whl
 ```
 
 ## Build the Template & Run
@@ -144,7 +144,7 @@ car, css, gif, jpeg, jpg, mp3, mp4, nib, ogg, otf, png, storyboard, strings, svg
 ## Usage
 
 ```fundamental
-File Scraper v2.8 ( github.com/ivan-sincek/file-scraper )
+File Scraper v2.9 ( github.com/ivan-sincek/file-scraper )
 
 Usage:   file-scraper -dir directory -o out          [-t template     ] [-e excludes    ] [-th threads]
 Example: file-scraper -dir decoded   -o results.html [-t template.json] [-e jpeg,jpg,png] [-th 10     ]
