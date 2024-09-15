@@ -55,7 +55,7 @@ python3 -m pip install --upgrade build
 
 python3 -m build
 
-python3 -m pip install dist/file_scraper-2.9-py3-none-any.whl
+python3 -m pip install dist/file_scraper-3.0-py3-none-any.whl
 ```
 
 ## Build the Template & Run
@@ -144,7 +144,7 @@ car, css, gif, jpeg, jpg, mp3, mp4, nib, ogg, otf, png, storyboard, strings, svg
 ## Usage
 
 ```fundamental
-File Scraper v2.9 ( github.com/ivan-sincek/file-scraper )
+File Scraper v3.0 ( github.com/ivan-sincek/file-scraper )
 
 Usage:   file-scraper -dir directory -o out          [-t template     ] [-e excludes    ] [-th threads]
 Example: file-scraper -dir decoded   -o results.html [-t template.json] [-e jpeg,jpg,png] [-th 10     ]
@@ -155,18 +155,18 @@ DIRECTORY
     Directory containing files, or a single file to scrape
     -dir, --directory> = decoded | files | test.exe | etc.
 TEMPLATE
-    JSON template file with extraction information, or a single RegEx to use
+    Template file with extraction details, or a single RegEx to use
     Default: built-in JSON template file
     -t, --template = template.json | "secret\: [\w\d]+" | etc.
 EXCLUDES
-    Exclude all files that end with
-    Use comma-separated values
+    Exclude all files that end with the specified extension
     Specify 'default' to load the built-in list
+    Use comma-separated values
     -e, --excludes = mp3 | default,jpeg,jpg,png | etc.
 INCLUDES
-    Include all files that end with
-    Use comma-separated values
+    Include all files that end with the specified extension
     Overrides excludes
+    Use comma-separated values
     -i, --includes = java | json,xml,yaml | etc.
 BEAUTIFY
     Beautify [minified] JavaScript (.js) files
@@ -178,6 +178,9 @@ THREADS
 OUT
     Output HTML file
     -o, --out = results.html | etc.
+DEBUG
+    Debug output
+    -dbg, --debug
 ```
 
 ## Images

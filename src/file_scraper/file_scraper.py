@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import argparse, base64, bs4, concurrent.futures, datetime, jsbeautifier, json, OpenSSL.crypto, os, regex as re, subprocess, sys, threading, urllib.parse
-from cryptography import x509
+import alive_progress, argparse, base64, bs4, concurrent.futures, datetime, jsbeautifier, json, OpenSSL.crypto, os, regex as re, subprocess, sys, threading, urllib.parse
 
 # ----------------------------------------
 
@@ -150,10 +149,11 @@ def write_file(data, out):
 
 class FileScraper:
 
-	def __init__(self, files, template, beautify, threads, out):
+	def __init__(self, files, template, beautify, threads, out, debug):
 		self.__files      = files
 		self.__template   = template
 		self.__out        = out
+		self.__debug      = debug
 		self.__beautify   = beautify
 		self.__threads    = threads
 		self.__print_lock = threading.Lock()
@@ -169,23 +169,27 @@ class FileScraper:
 	def run(self):
 		print(("Files to scrape: {0}").format(len(self.__files)))
 		print("Press CTRL + C to exit early - results will be saved")
-		with concurrent.futures.ThreadPoolExecutor(max_workers = self.__threads) as executor:
-			subprocesses = []
-			try:
-				for file in self.__files:
-					subprocesses.append(executor.submit(self.__run, file))
-				for subprocess in concurrent.futures.as_completed(subprocesses):
-					result = subprocess.result()
-					if isinstance(result, dict) and "file" in result:
-						print(result["file"])
-						self.__results.append(result)
-			except KeyboardInterrupt:
-				executor.shutdown(wait = True, cancel_futures = True)
+		with alive_progress.alive_bar(len(self.__files), title = "Progress:") as bar:
+			with concurrent.futures.ThreadPoolExecutor(max_workers = self.__threads) as executor:
+				subprocesses = []
+				try:
+					for file in self.__files:
+						subprocesses.append(executor.submit(self.__run, file))
+					for subprocess in concurrent.futures.as_completed(subprocesses):
+						result = subprocess.result()
+						if isinstance(result, dict) and "file" in result:
+							if self.__debug:
+								print(result["file"])
+							self.__results.append(result)
+						bar()
+				except KeyboardInterrupt:
+					executor.shutdown(wait = True, cancel_futures = True)
 		if not self.__results:
 			print("No results")
 		else:
 			self.__results = jquery(self.__results, "sort_by_file")
 			self.__set_html_content()
+			stopwatch.stop()
 			write_file(self.__soup, self.__out)
 
 	def __run(self, file):
@@ -202,7 +206,7 @@ class FileScraper:
 					response = {"file": file, "matched": response}
 		except Exception as ex:
 			response = None
-			self.__print(ex)
+			self.__print_error(ex)
 		return response
 
 	def __grep(self, response):
@@ -245,7 +249,7 @@ class FileScraper:
 						tmp[key] = results["matched"]
 					# --------------------
 			except Exception as ex:
-				self.__print(ex)
+				self.__print_error(ex)
 		return tmp
 
 	def __validate_matched(self, matched, subtemplate):
@@ -588,16 +592,16 @@ class FileScraper:
 		pre.string = collection
 		self.__soup.html.body.find_all("div")[1].append(pre)
 
-	def __print(self, msg):
+	def __print_error(self, ex):
 		with self.__print_lock:
-			print(msg)
+			print(ex)
 
 # ----------------------------------------
 
 class MyArgParser(argparse.ArgumentParser):
 
 	def print_help(self):
-		print("File Scraper v2.9 ( github.com/ivan-sincek/file-scraper )")
+		print("File Scraper v3.0 ( github.com/ivan-sincek/file-scraper )")
 		print("")
 		print("Usage:   file-scraper -dir directory -o out          [-t template     ] [-e excludes    ] [-th threads]")
 		print("Example: file-scraper -dir decoded   -o results.html [-t template.json] [-e jpeg,jpg,png] [-th 10     ]")
@@ -608,18 +612,18 @@ class MyArgParser(argparse.ArgumentParser):
 		print("    Directory containing files, or a single file to scrape")
 		print("    -dir, --directory> = decoded | files | test.exe | etc.")
 		print("TEMPLATE")
-		print("    JSON template file with extraction information, or a single RegEx to use")
+		print("    Template file with extraction details, or a single RegEx to use")
 		print("    Default: built-in JSON template file")
 		print("    -t, --template = template.json | \"secret\\: [\\w\\d]+\" | etc.")
 		print("EXCLUDES")
-		print("    Exclude all files that end with")
-		print("    Use comma-separated values")
+		print("    Exclude all files that end with the specified extension")
 		print("    Specify 'default' to load the built-in list")
+		print("    Use comma-separated values")
 		print("    -e, --excludes = mp3 | default,jpeg,jpg,png | etc.")
 		print("INCLUDES")
-		print("    Include all files that end with")
-		print("    Use comma-separated values")
+		print("    Include all files that end with the specified extension")
 		print("    Overrides excludes")
+		print("    Use comma-separated values")
 		print("    -i, --includes = java | json,xml,yaml | etc.")
 		print("BEAUTIFY")
 		print("    Beautify [minified] JavaScript (.js) files")
@@ -631,6 +635,9 @@ class MyArgParser(argparse.ArgumentParser):
 		print("OUT")
 		print("    Output HTML file")
 		print("    -o, --out = results.html | etc.")
+		print("DEBUG")
+		print("    Debug output")
+		print("    -dbg, --debug")
 
 	def error(self, message):
 		if len(sys.argv) > 1:
@@ -652,6 +659,7 @@ class Validate:
 		self.__parser.add_argument("-b"  , "--beautify" , required = False, action = "store_true", default = False)
 		self.__parser.add_argument("-th" , "--threads"  , required = False, type   = str         , default = ""   )
 		self.__parser.add_argument("-o"  , "--out"      , required = True , type   = str         , default = ""   )
+		self.__parser.add_argument("-dbg", "--debug"    , required = False, action = "store_true", default = False)
 
 	def run(self):
 		self.__args           = self.__parser.parse_args()
@@ -677,7 +685,7 @@ class Validate:
 	def __parse_directory(self, value):
 		tmp = []
 		if not os.path.exists(value):
-			self.__error("Directory containing files, or a single file does not exists")
+			self.__error("Directory containing files, or a single file does not exist")
 		elif os.path.isdir(value):
 			tmp = validate_directory_files(value)
 			if not tmp:
@@ -729,7 +737,7 @@ class Validate:
 			else:
 				tmp = jload_file(value)
 				if not tmp:
-					self.__error("Template file has invalid JSON format")
+					self.__error("Template file does not have the required structure")
 		else:
 			try:
 				re.compile(value)
@@ -769,11 +777,11 @@ class Validate:
 
 	def __parse_threads(self, value):
 		if not value.isdigit():
-			self.__error("Number of parallel threads to run must be numeric")
+			self.__error("Number of parallel threads must be numeric")
 		else:
 			value = int(value)
 			if value <= 0:
-				self.__error("Number of parallel threads to run must be greater than zero")
+				self.__error("Number of parallel threads must be greater than zero")
 		return value
 
 # ----------------------------------------
@@ -783,7 +791,7 @@ def main():
 	if validate.run():
 		print("###########################################################################")
 		print("#                                                                         #")
-		print("#                            File Scraper v2.9                            #")
+		print("#                            File Scraper v3.0                            #")
 		print("#                                    by Ivan Sincek                       #")
 		print("#                                                                         #")
 		print("# Scrape files for sensitive information.                                 #")
@@ -796,10 +804,10 @@ def main():
 			validate.get_arg("template"),
 			validate.get_arg("beautify"),
 			validate.get_arg("threads"),
-			validate.get_arg("out")
+			validate.get_arg("out"),
+			validate.get_arg("debug")
 		)
 		file_scraper.run()
-		stopwatch.stop()
 
 if __name__ == "__main__":
 	main()
