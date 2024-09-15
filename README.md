@@ -112,9 +112,9 @@ Prepare a [template](https://github.com/ivan-sincek/file-scraper/blob/main/src/f
 }
 ```
 
-**Make sure your regular expressions return only one capturing group e.g. `[1, 2, 3, 4]`; and not a touple e.g. `[(1, 2), (3, 4)]`.**
+**Make sure your regular expressions return only one capturing group, e.g., `[1, 2, 3, 4]`; and not a touple, e.g., `[(1, 2), (3, 4)]`.**
 
-Make sure to properly escape regular expression specific symbols in your template file, e.g. make sure to escape dot `.` as `\\.`, and forward slash `/` as `\\/`, etc.
+Make sure to properly escape regular expression specific symbols in your template file, e.g., make sure to escape dot `.` as `\\.`, and forward slash `/` as `\\/`, etc.
 
 | Name | Type | Required |Description |
 | --- | --- | --- | --- |
