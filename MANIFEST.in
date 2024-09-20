@@ -1,0 +1,3 @@
+include src/file_scraper/*.py
+include src/file_scraper/*.json
+include src/file_scraper/*.otf
