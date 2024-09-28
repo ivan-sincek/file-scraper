@@ -598,7 +598,7 @@ class FileScraper:
 class MyArgParser(argparse.ArgumentParser):
 
 	def print_help(self):
-		print("File Scraper v3.1 ( github.com/ivan-sincek/file-scraper )")
+		print("File Scraper v3.2 ( github.com/ivan-sincek/file-scraper )")
 		print("")
 		print("Usage:   file-scraper -dir directory -o out          [-t template     ] [-e excludes    ] [-th threads]")
 		print("Example: file-scraper -dir decoded   -o results.html [-t template.json] [-e jpeg,jpg,png] [-th 10     ]")
@@ -788,7 +788,7 @@ def main():
 	if validate.run():
 		print("###########################################################################")
 		print("#                                                                         #")
-		print("#                            File Scraper v3.1                            #")
+		print("#                            File Scraper v3.2                            #")
 		print("#                                    by Ivan Sincek                       #")
 		print("#                                                                         #")
 		print("# Scrape files for sensitive information.                                 #")
