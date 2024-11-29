@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title></filename> | File Scraper</title>
+		<meta name="author" content="Ivan Šincek" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<style>
+			@font-face {
+				font-family: "Fira Code Medium";
+				src: url("file://</font>") format("opentype");
+			}
+			:root {
+				--active: #cbd777;
+				--active-modal: #d777d7;
+				--inactive: #c8c8c8;
+				--matched: #ff1919;
+				--decoded: #1919ff;
+			}
+			html {
+				height: 100%;
+			}
+			body {
+				background-color: #f8f8f8;
+				margin: 0;
+				height: inherit;
+				color: #262626;
+				font-family: "Fira Code Medium", monospace;
+				font-size: 0.8em;
+				font-weight: 400;
+				text-align: left;
+				word-break: break-all;
+			}
+			nav {
+				right: 0;
+				bottom: 0;
+				position: fixed;
+				z-index: 3301;
+			}
+			ul {
+				display: flex;
+				flex-wrap: wrap;
+				margin: 0;
+				padding: 0;
+				list-style-type: none;
+			}
+			div {
+				/* display: flex; */
+				flex-direction: column;
+				padding: 1em;
+			}
+			div.modal {
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				position: fixed;
+			}
+			a {
+				text-decoration: none;
+			}
+			h2 {
+				margin: 0.8em 0 0.2em 0;
+				color: #717171;
+				font-size: inherit;
+				cursor: pointer;
+				font-weight: inherit;
+			}
+			h2:hover {
+				text-decoration: underline;
+			}
+			button {
+				/* display: block; */
+				background-color: var(--inactive);
+				padding: 0.2em 0.4em;
+				color: inherit;
+				font-family: inherit;
+				font-size: inherit;
+				text-align: inherit;
+				cursor: pointer;
+				border: 0.07em solid #a5a5a5;
+				transition: filter 0.25s ease;
+			}
+			button:hover {
+				filter: brightness(85%);
+			}
+			pre {
+				/* display: block; */
+				background-color: #e8e8e8;
+				margin: 0;
+				padding: 0.2em;
+				font-family: inherit;
+				font-size: 1em;
+				white-space: pre-wrap;
+				border: 0.07em solid #b8b8b8;
+			}
+			div.modal pre {
+				/* display: none; */
+				height: 100%;
+				overflow-y: scroll;
+			}
+			span.matched {
+				color: var(--matched);
+			}
+			span.decoded {
+				color: var(--decoded);
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navigation">
+			<ul>
+				<li>
+					<button onclick="collapse_all()">&#8593;&#8593;</button>
+				</li>
+				<li>
+					<button onclick="uncollapse_all()">&#8595;&#8595;</button>
+				</li>
+			</ul>
+		</nav>
+		<div class="main" style="display: flex;">
+			<a href="https://github.com/ivan-sincek/file-scraper">https://github.com/ivan-sincek/file-scraper</a>
+		</div>
+		<div class="modal" style="display: none;"></div>
+		<script>
+			const navMain = document.getElementsByTagName("nav")[0];
+			const navMainButtons = navMain.getElementsByTagName("button");
+			// --------------------
+			const divMain = document.getElementsByTagName("div")[0];
+			const divMainHeaders = divMain.getElementsByTagName("h2");
+			const divMainButtons = divMain.getElementsByTagName("button");
+			const divMainPres = divMain.getElementsByTagName("pre");
+			// --------------------
+			const divModal = document.getElementsByTagName("div")[1];
+			const divModalPres = divModal.getElementsByTagName("pre");
+			// --------------------
+			const style = getComputedStyle(document.documentElement);
+			const buttonActive = style.getPropertyValue("--active");
+			const buttonActiveModal = style.getPropertyValue("--active-modal");
+			const buttonInactive = style.getPropertyValue("--inactive");
+			// --------------------
+			for (let i = 0; i < divMainButtons.length; i++) {
+				divMainButtons[i].addEventListener("click", function () {
+					divMainPres[i].style.display = divMainPres[i].style.display !== "none" ? "none" : "block";
+				});
+			}
+			// --------------------
+			function set_file_method(button) {
+				let header = button.previousElementSibling;
+				while (header && header.tagName !== "H2") {
+					header = header.previousElementSibling;
+				}
+				if (button.style.display !== "none") {
+					header.setAttribute("onclick", "collapse_file(this)");
+				} else {
+					header.setAttribute("onclick", "uncollapse_file(this)");
+					let next = header.nextElementSibling;
+					while (next && next.tagName !== "H2") {
+						if (next.style.display !== "none") {
+							header.setAttribute("onclick", "collapse_file(this)");
+							break;
+						}
+						next = next.nextElementSibling;
+					}
+				}
+			}
+			function modify_file(header, display, method) {
+				let next = header.nextElementSibling;
+				while (next && next.tagName !== "H2") {
+					next.style.display = display;
+					next = next.nextElementSibling;
+				}
+				header.setAttribute("onclick", method);
+			}
+			function collapse_file(header) {
+				modify_file(header, "none", "uncollapse_file(this)");
+			}
+			function uncollapse_file(header) {
+				modify_file(header, "block", "collapse_file(this)");
+			}
+			// --------------------
+			function hide_modal() {
+				divModal.style.display = "none";
+				for (let i = 0; i < divModalPres.length; i++) {
+					divModalPres[i].style.display = "none";
+				}
+				for (let i = navMainButtons.length - divModalPres.length; i < navMainButtons.length; i++) {
+					navMainButtons[i].style.backgroundColor = buttonInactive;
+				}
+			}
+			// --------------------
+			function modify_all(display, method_file, method_nav, color) {
+				divMain.style.display = "flex";
+				for (let i = 0; i < divMainHeaders.length; i++) {
+					divMainHeaders[i].setAttribute("onclick", method_file);
+				}
+				for (let i = 0; i < divMainButtons.length; i++) {
+					divMainButtons[i].style.display = divMainPres[i].style.display = display;
+				}
+				for (let i = 2; i < navMainButtons.length - divModalPres.length; i++) {
+					navMainButtons[i].setAttribute("onclick", method_nav);
+					navMainButtons[i].style.backgroundColor = color;
+				}
+				hide_modal();
+			}
+			function collapse_all() {
+				modify_all("none", "uncollapse_file(this)", "uncollapse_single(this)", buttonInactive);
+			}
+			function uncollapse_all() {
+				modify_all("block", "collapse_file(this)", "collapse_single(this)", buttonActive);
+			}
+			// --------------------
+			function modify_single(button, display, method, color) {
+				divMain.style.display = "flex";
+				for (let i = 0; i < divMainButtons.length; i++) {
+					if (divMainButtons[i].className === button.className) {
+						divMainButtons[i].style.display = divMainPres[i].style.display = display;
+						set_file_method(divMainButtons[i]);
+					}
+				}
+				button.setAttribute("onclick", method);
+				button.style.backgroundColor = color;
+				hide_modal();
+			}
+			function collapse_single(button) {
+				modify_single(button, "none", "uncollapse_single(this)", buttonInactive);
+			}
+			function uncollapse_single(button) {
+				modify_single(button, "block", "collapse_single(this)", buttonActive);
+			}
+			// --------------------
+			function pop_modal(button) {
+				for (let i = navMainButtons.length - divModalPres.length; i < navMainButtons.length; i++) {
+					navMainButtons[i].style.backgroundColor = buttonInactive;
+				}
+				for (let i = 0; i < divModalPres.length; i++) {
+					if (divModalPres[i].className !== button.className) {
+						divModalPres[i].style.display = "none";
+					} else if (divModalPres[i].style.display !== "none") {
+						divModal.style.display = "none";
+						divModalPres[i].style.display = "none";
+						divMain.style.display = "flex";
+					} else {
+						divModal.style.display = "flex";
+						divModalPres[i].style.display = "block";
+						button.style.backgroundColor = buttonActiveModal;
+						divMain.style.display = "none";
+					}
+				}
+			}
+		</script>
+	</body>
+</html>

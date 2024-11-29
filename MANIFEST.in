@@ -1,0 +1,4 @@
+include src/file_scraper/*.py
+include src/file_scraper/fonts/*.woff2
+include src/file_scraper/reports/*.html
+include src/file_scraper/templates/*.json
