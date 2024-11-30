@@ -133,6 +133,8 @@ Make sure to properly escape regular expression specific symbols in your templat
 | unique | bool | no | Filter out duplicates. |
 | collect | bool | no | Collect all the matches in one place. |
 
+`minimum_decode` and `maximum_decode` will check the length of the decoded string after bad characters are removed.
+
 ---
 
 How I typically run the tool:
