@@ -26,21 +26,21 @@ def decode(string: str, encoding: template.Encoding):
 	decoded = ""
 	try:
 		if encoding == template.Encoding.URL:
-			decoded = __remove_bad_chars(urllib.parse.unquote(string))
+			decoded = remove_bad_chars(urllib.parse.unquote(string))
 		elif encoding == template.Encoding.BASE64:
-			decoded = __remove_bad_chars(base64.b64decode(string))
+			decoded = remove_bad_chars(base64.b64decode(string))
 		elif encoding == template.Encoding.HEX:
-			decoded = __remove_bad_chars(bytes.fromhex(string.replace("0x", "").replace("\\", "").replace("x", "")))
+			decoded = remove_bad_chars(bytes.fromhex(string.replace("0x", "").replace("\\", "").replace("x", "")))
 		elif encoding == template.Encoding.PEM:
 			if "CERTIFICATE" in string.upper():
-				decoded = __remove_bad_chars(OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_TEXT, OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, string)))
+				decoded = remove_bad_chars(OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_TEXT, OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, string)))
 			elif "PRIVATE KEY" in string.upper():
-				decoded = __remove_bad_chars(OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_TEXT, OpenSSL.crypto.load_privatekey(OpenSSL.crypto.FILETYPE_PEM, string)))
+				decoded = remove_bad_chars(OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_TEXT, OpenSSL.crypto.load_privatekey(OpenSSL.crypto.FILETYPE_PEM, string)))
 	except Exception:
 		pass
 	return decoded
 
-def __remove_bad_chars(string: str | bytes):
+def remove_bad_chars(string: str | bytes):
 	"""
 	Remove invalid characters and, if applicable, convert a byte string to a regular string.\n
 	Returns an empty string on failure.

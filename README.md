@@ -2,7 +2,9 @@
 
 Scrape files for sensitive information, and generate an interactive HTML report. Based on Rabin2.
 
-This tool is only as good as your RegEx skills.
+This tool is only as good as your [RegEx](https://github.com/ivan-sincek/file-scraper?tab=readme-ov-file#build-the-template--run) skills.
+
+You can also style your own [report](https://github.com/ivan-sincek/file-scraper/blob/main/src/file_scraper/reports/default.html).
 
 Tested on Kali Linux v2024.2 (64-bit).
 
@@ -55,12 +57,12 @@ python3 -m pip install --upgrade build
 
 python3 -m build
 
-python3 -m pip install dist/file_scraper-4.0-py3-none-any.whl
+python3 -m pip install dist/file_scraper-4.1-py3-none-any.whl
 ```
 
 ## Build the Template & Run
 
-Prepare a template such as [the default template](https://github.com/ivan-sincek/file-scraper/blob/main/src/file_scraper/default.json):
+Prepare a template such as [the default template](https://github.com/ivan-sincek/file-scraper/blob/main/src/file_scraper/templates/default.json):
 
 ```json
 {
@@ -148,7 +150,7 @@ car, css, gif, jpeg, jpg, mp3, mp4, nib, ogg, otf, eot, png, storyboard, strings
 ## Usage
 
 ```fundamental
-File Scraper v4.0 ( github.com/ivan-sincek/file-scraper )
+File Scraper v4.1 ( github.com/ivan-sincek/file-scraper )
 
 Usage:   file-scraper -dir directory -o out          [-t template     ] [-th threads]
 Example: file-scraper -dir decoded   -o results.html [-t template.json] [-th 10     ]

@@ -48,7 +48,7 @@ class Report:
 		"""
 		Add a file name header.
 		"""
-		attributes = {"onclick": "collapse_file(this)"}
+		attributes = {"onclick": "collapseFile(this)"}
 		h2 = self.__soup.new_tag("h2", **attributes)
 		h2.string = path
 		self.__soup.html.body.find("div").append(h2)
@@ -57,7 +57,7 @@ class Report:
 		"""
 		Add results unde the file name header.
 		"""
-		attributes = {"class": key, "onclick": "collapse_single(this)", "style": "background-color: var(--active);"}
+		attributes = {"class": key, "onclick": "collapseSingle(this)", "style": "background-color: var(--active);"}
 		if not self.__soup.html.body.nav.ul.find("button", attributes):
 			button = self.__soup.new_tag("button", **attributes)
 			button.string = key
@@ -79,7 +79,7 @@ class Report:
 		"""
 		Add a collection modal.
 		"""
-		attributes = {"class": key, "onclick": "pop_modal(this)", "style": "background-color: var(--inactive);"}
+		attributes = {"class": key, "onclick": "popModal(this)", "style": "background-color: var(--inactive);"}
 		if not self.__soup.html.body.nav.ul.find("button", attributes):
 			button = self.__soup.new_tag("button", **attributes)
 			button.string = f"{key}\u2197"
