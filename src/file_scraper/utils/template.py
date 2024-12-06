@@ -72,11 +72,10 @@ def build(query: str):
 	"""
 	Build a template from the specified regular expression.
 	"""
-	template = Template()
-	template.entries["query"] = TemplateEntry(
-		query      = query,
-		search     = True,
-		ignorecase = True,
-		unique     = True
-	)
+	template                  = Template()
+	entry                     = TemplateEntry(query, True)
+	entry.ignorecase          = True
+	entry.unique              = True
+	entry.collect             = True
+	template.entries["RegEx"] = entry
 	return template
