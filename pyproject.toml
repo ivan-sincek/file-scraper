@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "file-scraper"
-version = "4.2"
+version = "4.3"
 authors = [{ name = "Ivan Sincek" }]
 description = "Scrape files for sensitive information, and generate an interactive HTML report."
 readme = "README.md"

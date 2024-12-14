@@ -77,7 +77,7 @@ def overwrite(text: str, out: str):
 		confirm = input("Overwrite the output file (yes): ")
 	if confirm.lower() in ["yes", "y"]:
 		try:
-			open(out, "w").write(text)
+			open(out, "w", errors = "ignore").write(text)
 			print(f"Results have been saved to '{out}'")
 		except FileNotFoundError:
 			print(f"Cannot save the results to '{out}'")
@@ -87,6 +87,8 @@ def beautify(file: str):
 	Beautify a JavaScript (.js) file.
 	"""
 	try:
-		open(file, "w").write(jsbeautifier.beautify_file(file))
+		text = jsbeautifier.beautify_file(file)
+		if text:
+			open(file, "w").write(text)
 	except Exception:
 		pass
