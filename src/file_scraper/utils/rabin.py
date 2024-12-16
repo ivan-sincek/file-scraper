@@ -13,7 +13,7 @@ def run(file: str):
 	message = ""
 	try:
 		tmp = subprocess.run(f"rabin2 -zzzqq \"{file}\"", shell = True, stdout = subprocess.PIPE, stderr = subprocess.STDOUT).stdout
-		response = tmp.decode(__ENCODING).replace("\\n", "\n")
+		response = tmp.decode(__ENCODING).replace("\\n", "\n").replace("\\\\", "\\")
 	except Exception as ex:
 		message = str(ex)
 	return response, message
