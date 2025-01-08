@@ -130,7 +130,7 @@ class Validate:
 						tmp.extend(config.EXCLUDES)
 					else:
 						tmp.append(exclude)
-				tmp = array.unique(excludes)
+				tmp = array.unique(tmp)
 		self.__args.excludes = tmp
 
 	def __validate_includes(self):
