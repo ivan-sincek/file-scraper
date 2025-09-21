@@ -57,7 +57,7 @@ python3 -m pip install --upgrade build
 
 python3 -m build
 
-python3 -m pip install dist/file_scraper-4.6-py3-none-any.whl
+python3 -m pip install dist/file_scraper-4.7-py3-none-any.whl
 ```
 
 ## Build the Template & Run
@@ -152,7 +152,7 @@ car, css, gif, jpeg, jpg, mp3, mp4, nib, ogg, otf, eot, png, storyboard, strings
 ## Usage
 
 ```fundamental
-File Scraper v4.6 ( github.com/ivan-sincek/file-scraper )
+File Scraper v4.7 ( github.com/ivan-sincek/file-scraper )
 
 Usage:   file-scraper -dir directory -o out          [-t template     ] [-th threads]
 Example: file-scraper -dir decoded   -o results.html [-t template.json] [-th 10     ]
@@ -193,14 +193,14 @@ DEBUG
 
 ## Images
 
-<p align="center"><img src="https://github.com/ivan-sincek/file-scraper/blob/main/img/interactive_report_1.png" alt="Interactive Report (1)"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/ivan-sincek/file-scraper/refs/heads/main/img/interactive_report_1.png" alt="Interactive Report (1)"></p>
 
 <p align="center">Figure 1 - Interactive Report (1)</p>
 
-<p align="center"><img src="https://github.com/ivan-sincek/file-scraper/blob/main/img/interactive_report_2.png" alt="Interactive Report (2)"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/ivan-sincek/file-scraper/refs/heads/main/img/interactive_report_2.png" alt="Interactive Report (2)"></p>
 
 <p align="center">Figure 2 - Interactive Report (2)</p>
 
-<p align="center"><img src="https://github.com/ivan-sincek/file-scraper/blob/main/img/interactive_report_3.png" alt="Interactive Report (3)"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/ivan-sincek/file-scraper/refs/heads/main/img/interactive_report_3.png" alt="Interactive Report (3)"></p>
 
 <p align="center">Figure 3 - Interactive Report (3)</p>
